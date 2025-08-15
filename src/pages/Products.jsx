@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const productsData = [
   {
@@ -13,7 +13,7 @@ const productsData = [
     image: "https://5.imimg.com/data5/QV/LM/RV/SELLER-12689510/fresh-full-fat-curd-500x500.jpg",
     price: 30
 
-},
+  },
   {
     id: 3,
     name: "Ghee",
@@ -21,20 +21,20 @@ const productsData = [
     price: 75
 
   },
-    {
-    id: 1,
+  {
+    id: 4,
     name: "Butter Milk",
     image: "https://www.shutterstock.com/image-photo/summer-cooler-buttermilk-drink-made-260nw-1388268470.jpg",
     price: 20
   },
   {
-    id: 2,
+    id: 5,
     name: "Lassi",
     image: "https://media.istockphoto.com/id/1365859011/photo/drink-mango-lassi-in-two-glasses-on-rustic-concrete-table-with-fresh-ripe-cut-manfo-from-above.jpg?s=612x612&w=0&k=20&c=uHnr_0raQDe2sgUYHdP5GSa2raaj3ILG4m1cmFHtVJA=",
     price: 40
-},
+  },
   {
-    id: 3,
+    id: 6,
     name: "Ice Cream",
     image: "https://thumbs.dreamstime.com/b/holding-ice-cream-cones-under-sunset-two-hands-chocolate-raspberry-flavors-sunny-evening-busy-outdoor-event-370574051.jpg",
     price: 25
@@ -43,17 +43,34 @@ const productsData = [
 
 export default function Products() {
   const [quantities, setQuantities] = useState({});
+  const [cartItems, setCartItems] = useState([]);
 
   const handleQuantityChange = (id, change) => {
     setQuantities((prev) => ({
-      ...prev,      
+      ...prev,
       [id]: Math.max(1, (prev[id] || 1) + change),
     }));
   };
 
+
   const handleAddToCart = (product) => {
+    setCartItems((prev) => [
+      ...prev, // keep existing cart items
+      {
+        productID: product.id,
+        quantity: quantities[product.id] || 1,
+        productImage: product.image,
+        productName: product.name,
+        price: product.price,
+      }
+    ]);
     alert(`Added ${quantities[product.id] || 1} of ${product.name} to cart`);
   };
+
+  useEffect(() => {
+    console.log("Updated cartItems:", cartItems);
+    sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -88,7 +105,7 @@ export default function Products() {
               <label className="font-semibold item-left">₹ {product.price}</label>
             </div>
 
-             {/* <div className="mt-3 space-x-2">
+            {/* <div className="mt-3 space-x-2">
               <button
                 onClick={() => handleQuantityChange(product.id, -1)}
                 className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"

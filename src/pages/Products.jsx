@@ -41,35 +41,14 @@ const productsData = [
   },
 ];
 
-export default function Products() {
-  const [quantities, setQuantities] = useState({});
-  const [cartItems, setCartItems] = useState([]);
-
-  const handleQuantityChange = (id, change) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max(1, (prev[id] || 1) + change),
-    }));
-  };
 
 
-  const handleAddToCart = (product) => {
-    setCartItems((prev) => [
-      ...prev, // keep existing cart items
-      {
-        productID: product.id,
-        quantity: quantities[product.id] || 1,
-        productImage: product.image,
-        productName: product.name,
-        price: product.price,
-      }
-    ]);
-    alert(`Added ${quantities[product.id] || 1} of ${product.name} to cart`);
-  };
+export default function Products({cartItems,onProductChange,quantities,onQuantityChange}) {
+
 
   useEffect(() => {
     console.log("Updated cartItems:", cartItems);
-    sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
+    // sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
   return (
@@ -90,14 +69,14 @@ export default function Products() {
             {/* Quantity selector */}
             <div className="flex items-center mt-3 space-x-2">
               <button
-                onClick={() => handleQuantityChange(product.id, -1)}
+                onClick={() => onQuantityChange(product.id, -1)}
                 className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
               >
                 -
               </button>
               <span>{quantities[product.id] || 1}</span>
               <button
-                onClick={() => handleQuantityChange(product.id, 1)}
+                onClick={() => onQuantityChange(product.id, 1)}
                 className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
               >
                 +
@@ -117,7 +96,7 @@ export default function Products() {
 
             {/* Add to Cart */}
             <button
-              onClick={() => handleAddToCart(product)}
+              onClick={() => onProductChange(product)}
               className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
             >
               Add to Cart

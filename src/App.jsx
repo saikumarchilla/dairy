@@ -14,11 +14,33 @@ import Cart from './pages/Cart'
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+  const [quantities, setQuantities] = useState({});
 
+  const handleQuantityChange = (id, change) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max(1, (prev[id] || 1) + change),
+    }));
+  };
+
+  const handleAddToCart = (product) => {
+    setCartItems((prev) => [
+      ...prev, // keep existing cart items
+      {
+        productID: product.id,
+        quantity: quantities[product.id] || 1,
+        productImage: product.image,
+        productName: product.name,
+        price: product.price,
+      }
+    ]);
+    // alert(`Added ${quantities[product.id] || 1} of ${product.name} to cart`);
+  };
   return (
  <div className="flex flex-col h-screen w-full">
   {/* Header */}
-  <Header toggleSidebar={() => setShowSidebar(!showSidebar)} />
+  <Header toggleSidebar={() => setShowSidebar(!showSidebar)} cartItems={cartItems}/>
 
   {/* Body */}
   <div className="flex flex-1 w-full">
@@ -27,9 +49,9 @@ function App() {
     <main className={`p-4 bg-gray-100 transition-all duration-1 ${showSidebar ? "flex-1" : "w-full"}`}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<Products quantities = {quantities} onQuantityChange={handleQuantityChange} cartItems={cartItems} onProductChange = {handleAddToCart}/>} />
         <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={<Cart cartItems={cartItems}/>} />
       </Routes>
     </main>
   </div>

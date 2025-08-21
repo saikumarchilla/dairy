@@ -45,10 +45,8 @@ const productsData = [
 
 export default function Products({cartItems,onProductChange,quantities,onQuantityChange}) {
 
-
   useEffect(() => {
     console.log("Updated cartItems:", cartItems);
-    // sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
   return (
@@ -81,7 +79,7 @@ export default function Products({cartItems,onProductChange,quantities,onQuantit
               >
                 +
               </button>
-              <label className="font-semibold item-left">₹ {product.price}</label>
+              <label className="font-semibold item-left">₹ {quantities[product.id] * product.price || product.price}</label>
             </div>
 
             {/* <div className="mt-3 space-x-2">

@@ -11,10 +11,11 @@ import Home from './pages/Home'
 import Products from './pages/Products'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [quantities, setQuantities] = useState({});
 
   const handleQuantityChange = (id, change) => {
@@ -35,30 +36,34 @@ function App() {
         price: product.price,
       }
     ]);
+    toast.success(`${product.name} added to cart!`);
+
     // alert(`Added ${quantities[product.id] || 1} of ${product.name} to cart`);
   };
   return (
- <div className="flex flex-col h-screen w-full">
-  {/* Header */}
-  <Header toggleSidebar={() => setShowSidebar(!showSidebar)} cartItems={cartItems}/>
+    <div className="flex flex-col h-screen w-full">
+      {/* Header */}
+      <Header toggleSidebar={() => setShowSidebar(!showSidebar)} cartItems={cartItems} />
 
-  {/* Body */}
-  <div className="flex flex-1 w-full">
-    {showSidebar && <Sidebar />}
+      {/* Body */}
+      <div className="flex flex-1 w-full">
+        {showSidebar && <Sidebar />}
 
-    <main className={`p-4 bg-gray-100 transition-all duration-1 ${showSidebar ? "flex-1" : "w-full"}`}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products quantities = {quantities} onQuantityChange={handleQuantityChange} cartItems={cartItems} onProductChange = {handleAddToCart}/>} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart cartItems={cartItems}/>} />
-      </Routes>
-    </main>
-  </div>
+        <main className={`p-4 bg-gray-100 transition-all duration-1 ${showSidebar ? "flex-1" : "w-full"}`}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products quantities={quantities} onQuantityChange={handleQuantityChange} cartItems={cartItems} onProductChange={handleAddToCart} />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/cart" element={<Cart cartItems={cartItems} quantities={quantities} onQuantityChange={handleQuantityChange}/>} />
+          </Routes>
+        </main>
+      </div>
 
-  {/* Footer */}
-  <Footer />
-</div>
+      {/* Footer */}
+      <Footer />
+      <Toaster position="top-right" reverseOrder={false} />
+
+    </div>
   )
 }
 

@@ -15,10 +15,11 @@ export default function Sidebar() {
 return (
     <aside className="w-48 bg-green-200 p-4">
       <nav className="flex flex-col space-y-2">
-        <Link to="/" className="hover:underline">Home</Link>
-        <Link to="/products" className="hover:underline">Products</Link>
-        <Link to="/cart" className="hover:underline">Cart</Link>
-      </nav>
-    </aside>
-  );
+      <Link to="/" className="hover:underline">Home</Link>
+      <Link to="/products" className="hover:underline">Products</Link>
+      <Link to="/cart" className="hover:underline">Cart</Link>
+      <Link to="/orders" className="hover:underline">My Orders</Link>
+    </nav>
+  </aside>
+);
 }

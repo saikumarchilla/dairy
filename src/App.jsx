@@ -12,6 +12,8 @@ import Products from './pages/Products'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
 import toast, { Toaster } from 'react-hot-toast';
+import Address from './pages/address'
+import Orders from './pages/Orders'
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -26,20 +28,36 @@ function App() {
   };
 
   const handleAddToCart = (product) => {
-    setCartItems((prev) => [
-      ...prev, // keep existing cart items
-      {
-        productID: product.id,
-        quantity: quantities[product.id] || 1,
-        productImage: product.image,
-        productName: product.name,
-        price: product.price,
-      }
-    ]);
-    toast.success(`${product.name} added to cart!`);
+    setCartItems((prev) => {
+      // Check if product already exists
+      const existingIndex = prev.findIndex(item => item.productID === product.id);
 
-    // alert(`Added ${quantities[product.id] || 1} of ${product.name} to cart`);
+      if (existingIndex !== -1) {
+        // Update the existing product
+        const updatedCart = [...prev];
+        updatedCart[existingIndex] = {
+          ...updatedCart[existingIndex],
+          quantity: quantities[product.id] || updatedCart[existingIndex].quantity,
+        };
+        return updatedCart;
+      } else {
+        // Add as new product
+        return [
+          ...prev,
+          {
+            productID: product.id,
+            quantity: quantities[product.id] || 1,
+            productImage: product.image,
+            productName: product.name,
+            price: product.price,
+          },
+        ];
+      }
+    });
+
+    toast.success(`${product.name} added to cart!`);
   };
+
   return (
     <div className="flex flex-col h-screen w-full">
       {/* Header */}
@@ -54,7 +72,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products quantities={quantities} onQuantityChange={handleQuantityChange} cartItems={cartItems} onProductChange={handleAddToCart} />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/cart" element={<Cart cartItems={cartItems} quantities={quantities} onQuantityChange={handleQuantityChange}/>} />
+            <Route path="/cart" element={<Cart cartItems={cartItems} quantities={quantities} onQuantityChange={handleQuantityChange} />} />
+            <Route path="/address" element={<Address />} />
+            <Route path="/orders" element={<Orders/>} />
           </Routes>
         </main>
       </div>
